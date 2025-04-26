@@ -1,0 +1,21 @@
+---
+crontab:
+  enableSeconds: true
+  jobs:
+    - name: test job
+      schedule: "*/20 * * * * *"
+http:
+  port: 8080
+  cors:
+    headers: "*"
+    methods: "GET, POST, OPTIONS, PUT, DELETE"
+    origins: "*"
+  timeouts:
+    read: 30s
+    write: 30s
+    idle: 60s
+    shutdown: 15s
+logger:
+  level: debug
+storage:
+  path: ./base/db.sqlite
