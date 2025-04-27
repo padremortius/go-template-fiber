@@ -10,6 +10,7 @@ http:
     headers: "*"
     methods: "GET, POST, OPTIONS, PUT, DELETE"
     origins: "*"
+  swaggerDisabled: true
   timeouts:
     read: 30s
     write: 30s

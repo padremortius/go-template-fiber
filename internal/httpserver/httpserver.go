@@ -12,6 +12,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/mvrilo/go-redoc"
+	fiberredoc "github.com/mvrilo/go-redoc/fiber"
 	"github.com/valyala/fasthttp"
 )
 
@@ -21,8 +23,9 @@ type HTTP struct {
 		Methods string `yaml:"methods" json:"methods" validate:"required"`
 		Origins string `yaml:"origins" json:"origins" validate:"required"`
 	} `yaml:"cors" json:"cors"`
-	Port     string `yaml:"port" json:"port"`
-	Timeouts struct {
+	Port            string `yaml:"port" json:"port"`
+	SwaggerDisabled bool   `yaml:"swaggerDisabled" json:"swaggerDisabled" validate:"required"`
+	Timeouts        struct {
 		Read     time.Duration `yaml:"read" json:"read"`
 		Write    time.Duration `yaml:"write" json:"write"`
 		Idle     time.Duration `yaml:"idle" json:"idle"`
@@ -69,6 +72,26 @@ func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
 	prometheus := fiberPrometheus.New("fiber")
 	prometheus.RegisterAt(app, "/prometheus")
 	app.Use(prometheus.Middleware)
+
+	//redoc
+	if opts.SwaggerDisabled {
+		doc := redoc.Redoc{
+			SpecFile: "spec/docs.json",
+			SpecPath: "/docs.json",
+			DocsPath: "/docs",
+			Options: map[string]any{
+				"disableSearch": true,
+				"theme": map[string]any{
+					"colors":     map[string]any{"primary": map[string]any{"main": "#297b21"}},
+					"typography": map[string]any{"headings": map[string]any{"fontWeight": "600"}},
+					"sidebar":    map[string]any{"backgroundColor": "lightblue"},
+				},
+				"decorator": map[string]any{},
+			},
+		}
+
+		app.Use(fiberredoc.New(doc))
+	}
 
 	s := &Server{
 		server: &fasthttp.Server{
