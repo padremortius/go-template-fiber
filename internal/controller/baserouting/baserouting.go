@@ -24,13 +24,13 @@ func getEnv(c *fiber.Ctx) error {
 	return c.JSON(config.Cfg)
 }
 
-func InitBaseRouter(app *fiber.App, AppName string) {
+func InitBaseRouter(app *fiber.App) {
 	// K8s probe
 	app.Get("/health", getHealth)
 
-	//info about service
+	// info about service
 	app.Get("/info", getInfo)
 
-	//env
+	// env
 	app.Get("/env", getEnv)
 }

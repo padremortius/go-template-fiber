@@ -53,14 +53,14 @@ func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
 
 	app.Use(recover.New())
 
-	//CORS settings
+	// CORS settings
 	app.Use(cors.New(cors.Config{
 		AllowHeaders: opts.Cors.Headers,
 		AllowMethods: opts.Cors.Methods,
 		AllowOrigins: opts.Cors.Origins,
 	}))
 
-	//Logger settings
+	// Logger settings
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
 		Logger:   log.Logger,
 		Fields:   []string{"latency", "status", "method", "url", "ua", "ip", "bytesSent"},
@@ -68,12 +68,12 @@ func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
 		Messages: []string{"-"},
 	}))
 
-	//metrics settings
+	// metrics settings
 	prometheus := fiberPrometheus.New("fiber")
 	prometheus.RegisterAt(app, "/prometheus")
 	app.Use(prometheus.Middleware)
 
-	//redoc
+	// redoc
 	if opts.SwaggerDisabled {
 		doc := redoc.Redoc{
 			SpecFile: "spec/docs.json",

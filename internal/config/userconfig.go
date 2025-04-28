@@ -18,6 +18,8 @@ type (
 )
 
 func ReadPwd() error {
+	var pwd pwdData
+
 	pwdFile, err := os.ReadFile(fmt.Sprint("./", Cfg.BaseApp.Name, ".json"))
 	if err != nil {
 		return err

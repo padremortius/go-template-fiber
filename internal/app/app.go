@@ -30,7 +30,7 @@ func Run() {
 
 	log.ChangeLogLevel(config.Cfg.Log.Level)
 
-	//init storage
+	// init storage
 	storage, err := sqlite.New(ctxParent, config.Cfg.Storage.Path, log)
 	if err != nil {
 		log.Logger.Fatal().Msgf("Storage error: %v", err)
@@ -42,7 +42,7 @@ func Run() {
 
 	ctxDb := context.WithValue(ctxParent, "db", storage)
 
-	//Init crontab
+	// Init crontab
 	ctb := crontab.New(ctxDb, log, &config.Cfg.Crontab)
 	ctb.LoadTasks(ctxParent, &config.Cfg.Crontab)
 	go ctb.StartCron()
@@ -51,7 +51,7 @@ func Run() {
 	log.Logger.Info().Msg("Start web-server on port " + config.Cfg.HTTP.Port)
 
 	httpServer := httpserver.New(ctxParent, log, &config.Cfg.HTTP)
-	baserouting.InitBaseRouter(httpServer.Handler, config.Cfg.BaseApp.Name)
+	baserouting.InitBaseRouter(httpServer.Handler)
 	v1.InitAppRouter(httpServer.Handler)
 	// Waiting signal
 	interrupt := make(chan os.Signal, 1)

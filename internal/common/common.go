@@ -31,8 +31,8 @@ func GetFileByURL(URL string) ([]byte, error) {
 	return body, nil
 }
 
-func GetPubKey(URL string) (string, error) {
-	rawBytes, err := GetFileByURL(URL)
+func GetPubKey(aURL string) (string, error) {
+	rawBytes, err := GetFileByURL(aURL)
 	if err != nil {
 		return "", err
 	}
