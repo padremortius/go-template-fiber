@@ -3,8 +3,9 @@ package httpserver
 import (
 	"context"
 	"fmt"
-	"go-template-fiber/internal/svclogger"
 	"time"
+
+	"github.com/padremortius/go-template-fiber/internal/svclogger"
 
 	fiberPrometheus "github.com/ansrivas/fiberprometheus/v2"
 	gojson "github.com/goccy/go-json"

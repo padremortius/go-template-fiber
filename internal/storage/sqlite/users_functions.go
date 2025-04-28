@@ -1,8 +1,9 @@
 package sqlite
 
 import (
-	"go-template-fiber/internal/structs/models"
 	"time"
+
+	"github.com/padremortius/go-template-fiber/internal/structs/models"
 
 	"gorm.io/gorm/clause"
 )

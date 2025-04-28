@@ -2,16 +2,17 @@ package app
 
 import (
 	"context"
-	"go-template-fiber/internal/config"
-	"go-template-fiber/internal/controller/baserouting"
-	v1 "go-template-fiber/internal/controller/v1"
-	"go-template-fiber/internal/crontab"
-	"go-template-fiber/internal/httpserver"
-	"go-template-fiber/internal/storage/sqlite"
-	"go-template-fiber/internal/svclogger"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/padremortius/go-template-fiber/internal/config"
+	"github.com/padremortius/go-template-fiber/internal/controller/baserouting"
+	v1 "github.com/padremortius/go-template-fiber/internal/controller/v1"
+	"github.com/padremortius/go-template-fiber/internal/crontab"
+	"github.com/padremortius/go-template-fiber/internal/httpserver"
+	"github.com/padremortius/go-template-fiber/internal/storage/sqlite"
+	"github.com/padremortius/go-template-fiber/internal/svclogger"
 )
 
 func Run() {
@@ -52,7 +53,7 @@ func Run() {
 
 	httpServer := httpserver.New(ctxParent, log, &config.Cfg.HTTP)
 	baserouting.InitBaseRouter(httpServer.Handler)
-	v1.InitAppRouter(httpServer.Handler)
+	v1.InitAppRouter(httpServer.Handler, config.Cfg.BaseApp.Name)
 	// Waiting signal
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)

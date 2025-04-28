@@ -1,4 +1,4 @@
-module go-template-fiber
+module github.com/padremortius/go-template-fiber
 
 go 1.23.0
 

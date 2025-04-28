@@ -1,0 +1,36 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  clear:
+    vars:
+      PROJECT_NAME: "go-template-fiber"
+
+    cmds:
+      - rm -f ./{{.PROJECT_NAME}} coverage.out
+
+  build:
+    cmds:
+      - go build .
+    silent: true
+
+  build-release:
+    vars:
+      GIT_COMMIT:
+        sh: git log -n 1 --format=%h
+      GIT_BRANCH:
+        sh: git name-rev --name-only {{.GIT_COMMIT}}
+      VERSION: '{{.BUILDNUM| default "1"}}'
+    cmds:
+      - go build -ldflags="-X main.aGitHash={{.GIT_COMMIT}} -X main.aGitBranch={{.GIT_BRANCH}} -X main.aBuildNumber={{.BUILDNUM}}" .
+
+  gen-apidoc:
+    cmds:
+      - mkdir -p spec
+      - go-swagger3 --module-path . --output spec/docs.json --schema-without-pkg
+
+  test:
+    cmds:
+      - go test ./... -v --coverprofile=coverage.out
+    silent: true

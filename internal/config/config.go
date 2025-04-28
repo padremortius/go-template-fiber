@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"go-template-fiber/internal/common"
-	"go-template-fiber/internal/crontab"
-	"go-template-fiber/internal/httpserver"
-	"go-template-fiber/internal/storage"
-	"go-template-fiber/internal/svclogger"
 	"net/url"
+
+	"github.com/padremortius/go-template-fiber/internal/common"
+	"github.com/padremortius/go-template-fiber/internal/crontab"
+	"github.com/padremortius/go-template-fiber/internal/httpserver"
+	"github.com/padremortius/go-template-fiber/internal/storage"
+	"github.com/padremortius/go-template-fiber/internal/svclogger"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/ilyakaznacheev/cleanenv"

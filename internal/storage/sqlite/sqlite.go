@@ -2,9 +2,10 @@ package sqlite
 
 import (
 	"context"
-	"go-template-fiber/internal/svclogger"
 	"os"
 	"path/filepath"
+
+	"github.com/padremortius/go-template-fiber/internal/svclogger"
 
 	"github.com/glebarez/sqlite"
 

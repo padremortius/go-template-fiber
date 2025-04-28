@@ -1,8 +1,8 @@
 package main
 
 import (
-	"go-template-fiber/internal/app"
-	"go-template-fiber/internal/config"
+	"github.com/padremortius/go-template-fiber/internal/app"
+	"github.com/padremortius/go-template-fiber/internal/config"
 )
 
 var (

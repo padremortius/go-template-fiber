@@ -2,7 +2,8 @@ package crontab
 
 import (
 	"context"
-	"go-template-fiber/internal/usecase/testcase"
+
+	"github.com/padremortius/go-template-fiber/internal/usecase/testcase"
 )
 
 func (ct *Crontab) LoadTasks(aCtx context.Context, opts *CronOpts) {

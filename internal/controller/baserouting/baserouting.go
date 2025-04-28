@@ -1,7 +1,7 @@
 package baserouting
 
 import (
-	"go-template-fiber/internal/config"
+	"github.com/padremortius/go-template-fiber/internal/config"
 
 	fiber "github.com/gofiber/fiber/v2"
 )
