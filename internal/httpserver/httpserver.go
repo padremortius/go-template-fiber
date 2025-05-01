@@ -7,35 +7,21 @@ import (
 
 	"github.com/padremortius/go-template-fiber/internal/svclogger"
 
-	fiberPrometheus "github.com/ansrivas/fiberprometheus/v2"
 	gojson "github.com/goccy/go-json"
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/mvrilo/go-redoc"
-	fiberredoc "github.com/mvrilo/go-redoc/fiber"
 	"github.com/valyala/fasthttp"
 )
 
 type HTTP struct {
-	Cors struct {
-		Headers string `yaml:"headers" json:"headers" validate:"required"`
-		Methods string `yaml:"methods" json:"methods" validate:"required"`
-		Origins string `yaml:"origins" json:"origins" validate:"required"`
-	} `yaml:"cors" json:"cors"`
-	Port            string `yaml:"port" json:"port"`
+	Port            string `yaml:"port" json:"port" default:"8080"`
 	SwaggerDisabled bool   `yaml:"swaggerDisabled" json:"swaggerDisabled" validate:"required"`
 	Timeouts        struct {
-		Read     time.Duration `yaml:"read" json:"read"`
-		Write    time.Duration `yaml:"write" json:"write"`
-		Idle     time.Duration `yaml:"idle" json:"idle"`
-		Shutdown time.Duration `yaml:"shutdown" json:"shutdown"`
+		Read     time.Duration `yaml:"read" json:"read" default:"30s"`
+		Write    time.Duration `yaml:"write" json:"write" default:"30s"`
+		Idle     time.Duration `yaml:"idle" json:"idle" default:"30s"`
+		Shutdown time.Duration `yaml:"shutdown" json:"shutdown" default:"30s"`
 	} `yaml:"timeouts" json:"timeouts"`
-	// Token struct {
-	// 	PubKeyURL string `yaml:"pubKeyURL" json:"pubKeyURL" validate:"required"`
-	// 	PublicKey string `yaml:"publicKey" json:"publicKey" validate:"required"`
-	// } `yaml:"token" json:"token"`
 }
 
 type Server struct {
@@ -48,51 +34,18 @@ type Server struct {
 // New -.
 func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
 	app := fiber.New(fiber.Config{
-		JSONEncoder: gojson.Marshal,
-		JSONDecoder: gojson.Unmarshal,
+		JSONEncoder:           gojson.Marshal,
+		JSONDecoder:           gojson.Unmarshal,
+		DisableStartupMessage: true,
 	})
 
-	app.Use(recover.New())
-
-	// CORS settings
-	app.Use(cors.New(cors.Config{
-		AllowHeaders: opts.Cors.Headers,
-		AllowMethods: opts.Cors.Methods,
-		AllowOrigins: opts.Cors.Origins,
-	}))
-
-	// Logger settings
+	//Logger settings
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
 		Logger:   log.Logger,
 		Fields:   []string{"latency", "status", "method", "url", "ua", "ip", "bytesSent"},
-		SkipURIs: []string{"/favicon.ico", "/health"},
+		SkipURIs: mySkipper(),
 		Messages: []string{"-"},
 	}))
-
-	// metrics settings
-	prometheus := fiberPrometheus.New("fiber")
-	prometheus.RegisterAt(app, "/prometheus")
-	app.Use(prometheus.Middleware)
-
-	// redoc
-	if opts.SwaggerDisabled {
-		doc := redoc.Redoc{
-			SpecFile: "spec/docs.json",
-			SpecPath: "/docs.json",
-			DocsPath: "/docs",
-			Options: map[string]any{
-				"disableSearch": true,
-				"theme": map[string]any{
-					"colors":     map[string]any{"primary": map[string]any{"main": "#297b21"}},
-					"typography": map[string]any{"headings": map[string]any{"fontWeight": "600"}},
-					"sidebar":    map[string]any{"backgroundColor": "lightblue"},
-				},
-				"decorator": map[string]any{},
-			},
-		}
-
-		app.Use(fiberredoc.New(doc))
-	}
 
 	s := &Server{
 		server: &fasthttp.Server{

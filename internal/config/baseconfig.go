@@ -25,11 +25,11 @@ var (
 	binVersion = "0.0.1"
 )
 
-func init() {
-	err := cleanenv.ReadConfig("application.yml", &Cfg)
-	if err != nil {
-		panic(err)
+func (c *Config) ReadBaseConfig() error {
+	if err := cleanenv.ReadConfig("application.yml", c); err != nil {
+		return err
 	}
+	return nil
 }
 
 func InitVersion(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) *Version {

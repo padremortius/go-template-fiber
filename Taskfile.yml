@@ -6,9 +6,9 @@ tasks:
   clear:
     vars:
       PROJECT_NAME: "go-template-fiber"
-
     cmds:
       - rm -f ./{{.PROJECT_NAME}} coverage.out
+      - rm -rf base/*
 
   build:
     cmds:
@@ -29,6 +29,10 @@ tasks:
     cmds:
       - mkdir -p spec
       - go-swagger3 --module-path . --output spec/docs.json --schema-without-pkg
+
+  lint:
+    cmds:
+      - golangci-lint run ./...
 
   test:
     cmds:

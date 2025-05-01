@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/padremortius/go-template-fiber/internal/app"
-	"github.com/padremortius/go-template-fiber/internal/config"
 )
 
 var (
@@ -22,6 +21,5 @@ var (
 // @LicenseURL https://en.wikipedia.org/wiki/MIT_License
 
 func main() {
-	config.Cfg.Version = *config.InitVersion(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash)
-	app.Run()
+	app.Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash)
 }

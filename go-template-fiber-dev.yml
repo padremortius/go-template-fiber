@@ -19,4 +19,5 @@ http:
 logger:
   level: debug
 storage:
+  dbType: sqlite
   path: ./base/db.sqlite

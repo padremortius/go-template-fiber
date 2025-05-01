@@ -36,7 +36,9 @@ func GetPubKey(aURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	var answer map[string]string
+
 	if err = gojson.Unmarshal(rawBytes, &answer); err != nil {
 		return "", err
 	}
