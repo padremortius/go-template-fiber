@@ -6,14 +6,13 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/padremortius/go-template-fiber/internal/common"
+	"github.com/go-playground/validator/v10"
+	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/padremortius/go-template-fiber/internal/crontab"
 	"github.com/padremortius/go-template-fiber/internal/httpserver"
 	"github.com/padremortius/go-template-fiber/internal/storage"
 	"github.com/padremortius/go-template-fiber/internal/svclogger"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/padremortius/go-template-fiber/pkgs/common"
 )
 
 type Config struct {
