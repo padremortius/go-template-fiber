@@ -13,6 +13,6 @@ import (
 // @Router /go-template-fiber/v1/test [get]
 // @Tags v1
 func (v1 *v1Routes) getTest(c *fiber.Ctx) error {
-	v1.log.Logger.Info().Msg("Start getTest")
+	v1.log.Info("Start getTest")
 	return c.JSON(&JSONResult{Code: http.StatusOK, Message: "Test complete!"})
 }

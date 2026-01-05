@@ -25,7 +25,7 @@ func (s *Storage) AddUser(u models.User) error {
 }
 
 func (s *Storage) DeleteUser(tgUserId int64) error {
-	s.log.Logger.Debug().Msgf("Delete user: %v", tgUserId)
+	s.log.Debugf("Delete user: %v", tgUserId)
 	return s.db.Model(
 		&models.User{},
 	).Where(
