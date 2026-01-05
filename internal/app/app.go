@@ -27,7 +27,7 @@ func Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) {
 	ctxParent, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	log.Logger.Info().Msgf("Start application. Version: %v", appCfg.Version.Version)
+	log.Logger.Info().Msgf("Start application. Version: %v", appCfg.Version.BuildVersion)
 
 	log.ChangeLogLevel(appCfg.Log.Level)
 

@@ -2,8 +2,6 @@ package config
 
 import (
 	"fmt"
-
-	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type (
@@ -14,7 +12,7 @@ type (
 	}
 
 	Version struct {
-		Version        string `json:"version"`
+		BuildVersion   string `json:"buildVersion"`
 		BuildTimeStamp string `json:"buildTimeStamp,omitempty"`
 		GitBranch      string `json:"gitBranch,omitempty"`
 		GitHash        string `json:"gitHash,omitempty"`
@@ -25,16 +23,9 @@ var (
 	binVersion = "0.0.1"
 )
 
-func (c *Config) ReadBaseConfig() error {
-	if err := cleanenv.ReadConfig("application.yml", c); err != nil {
-		return err
-	}
-	return nil
-}
-
 func InitVersion(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) *Version {
 	return &Version{
-		Version:        fmt.Sprint(binVersion, ".", aBuildNumber),
+		BuildVersion:   fmt.Sprint(binVersion, ".", aBuildNumber),
 		GitBranch:      aGitBranch,
 		GitHash:        aGitHash,
 		BuildTimeStamp: aBuildTimeStamp,
