@@ -2,7 +2,6 @@ package config
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
@@ -10,9 +9,10 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/padremortius/go-template-fiber/internal/crontab"
 	"github.com/padremortius/go-template-fiber/internal/storage"
+	"github.com/padremortius/go-template-fiber/pkgs/baseconfig"
 	"github.com/padremortius/go-template-fiber/pkgs/common"
+	"github.com/padremortius/go-template-fiber/pkgs/crontab"
 	"github.com/padremortius/go-template-fiber/pkgs/httpserver"
 	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
@@ -22,16 +22,14 @@ type (
 		AuthSrvPassword string `yaml:"-" json:"-" validate:"required"`
 	}
 
-	pwdData map[string]string
-
 	Config struct {
-		App     `yaml:"app" json:"app" validate:"required"`
-		BaseApp `yaml:"baseApp" json:"baseApp" validate:"required"`
-		Crontab crontab.CronOpts   `yaml:"crontab" json:"crontab" validate:"required"`
-		HTTP    httpserver.HTTP    `yaml:"http" json:"http" validate:"required"`
-		Log     svclogger.Log      `yaml:"logger" json:"logger" validate:"required"`
-		Storage storage.StorageCfg `yaml:"storage" json:"storage" validate:"required"`
-		Version `json:"version"`
+		App                `yaml:"app" json:"app" validate:"required"`
+		baseconfig.BaseApp `yaml:"baseApp" json:"baseApp" validate:"required"`
+		Crontab            crontab.CronOpts   `yaml:"crontab" json:"crontab" validate:"required"`
+		HTTP               httpserver.HTTP    `yaml:"http" json:"http" validate:"required"`
+		Log                svclogger.Log      `yaml:"logger" json:"logger" validate:"required"`
+		Storage            storage.StorageCfg `yaml:"storage" json:"storage" validate:"required"`
+		Version            baseconfig.Version `json:"version"`
 	}
 )
 
@@ -47,24 +45,32 @@ func (c *Config) ReadBaseConfig() error {
 //
 // It returns an error if there is an issue reading the environment variables
 // or the configuration file.
-func NewConfig() (*Config, error) {
+func NewConfig(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) (*Config, error) {
 	var cfg Config
 	if err := cfg.ReadBaseConfig(); err != nil {
-		return &Config{}, errors.New("NewConfg: " + err.Error())
+		return &Config{}, errors.New("NewConfig: " + err.Error())
 	}
+
+	cfg.Version = *baseconfig.InitVersion(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash)
 
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
 		return &Config{}, err
 	}
 
-	appConfigName := fmt.Sprint(cfg.BaseApp.Name, "-", cfg.BaseApp.ProfileName, ".yml")
+	if _, err := os.Stat(".env"); err == nil {
+		if err := cleanenv.ReadConfig(".env", &cfg); err != nil {
+			return &Config{}, err
+		}
+	}
 
-	if cfg.BaseApp.ProfileName == "dev" {
+	appConfigName := fmt.Sprint(cfg.Name, "-", cfg.ProfileName, ".yml")
+
+	if cfg.ProfileName == "dev" {
 		if err := cleanenv.ReadConfig(appConfigName, &cfg); err != nil {
 			return &Config{}, err
 		}
 	} else {
-		configURL, _ := url.JoinPath(cfg.BaseApp.ConfSrvURI, appConfigName)
+		configURL, _ := url.JoinPath(cfg.ConfSrvURI, appConfigName)
 
 		data, err := common.GetFileByURL(configURL)
 		if err != nil {
@@ -95,20 +101,12 @@ func (c *Config) validateConfig() error {
 }
 
 func (c *Config) ReadPwd() error {
-	var pwd pwdData
-	fname := fmt.Sprint("./", c.BaseApp.Name, ".json")
-	if _, err := os.Stat(fname); err == nil {
-		pwdFile, err := os.ReadFile(fname)
-		if err != nil {
-			return err
-		}
-
-		if err = json.Unmarshal(pwdFile, &pwd); err != nil {
-			return err
-		}
-
-		c.App.AuthSrvPassword = pwd["app.authSrvPassword"]
+	pwd, err := baseconfig.FillPwdMap(c.SecPath)
+	if err != nil {
+		return err
 	}
+
+	c.AuthSrvPassword = pwd["authSrvPassword"]
 
 	return nil
 }

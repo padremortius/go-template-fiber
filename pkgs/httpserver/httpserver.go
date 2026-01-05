@@ -2,7 +2,6 @@ package httpserver
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
@@ -24,7 +23,7 @@ type HTTP struct {
 	} `yaml:"timeouts" json:"timeouts"`
 }
 
-type Server struct {
+type AppServer struct {
 	ctx     context.Context
 	server  *fasthttp.Server
 	Handler *fiber.App
@@ -32,7 +31,7 @@ type Server struct {
 }
 
 // New -.
-func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
+func New(c context.Context, log *svclogger.Log, opts *HTTP) *AppServer {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:           gojson.Marshal,
 		JSONDecoder:           gojson.Unmarshal,
@@ -47,7 +46,7 @@ func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
 		Messages: []string{"-"},
 	}))
 
-	s := &Server{
+	s := &AppServer{
 		server: &fasthttp.Server{
 			Handler:      app.Handler(),
 			IdleTimeout:  opts.Timeouts.Idle,
@@ -59,25 +58,23 @@ func New(c context.Context, log *svclogger.Log, opts *HTTP) *Server {
 		ctx:     c,
 	}
 
-	s.start(fmt.Sprint(":", opts.Port))
-
 	return s
 }
 
-func (s *Server) start(aPort string) {
+func (s *AppServer) Start(aPort string) {
 	go func() {
-		s.notify <- s.Handler.Listen(aPort)
+		s.notify <- s.Handler.Listen(":" + aPort)
 		close(s.notify)
 	}()
 }
 
 // Notify -.
-func (s *Server) Notify() <-chan error {
+func (s *AppServer) Notify() <-chan error {
 	return s.notify
 }
 
 // Shutdown -.
-func (s *Server) Shutdown(shutdownTimeout time.Duration) error {
+func (s *AppServer) Shutdown(shutdownTimeout time.Duration) error {
 	ctx, cancel := context.WithTimeout(s.ctx, shutdownTimeout)
 	defer cancel()
 
