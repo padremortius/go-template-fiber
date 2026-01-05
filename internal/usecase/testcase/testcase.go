@@ -3,15 +3,15 @@ package testcase
 import (
 	"context"
 
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
 func RunTask(aCtx context.Context, alog *svclogger.Log) {
-	alog.Logger.Info().Msgf("Start task 'Test usecase'")
+	alog.Infof("Start task 'Test usecase'")
 
 	_, cancel := context.WithCancel(aCtx)
 	defer cancel()
 
 	//
-	alog.Logger.Info().Msgf("End task 'Test usecase'")
+	alog.Infof("End task 'Test usecase'")
 }

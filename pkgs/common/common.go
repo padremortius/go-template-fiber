@@ -1,15 +1,15 @@
 package common
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
-
-	gojson "github.com/goccy/go-json"
+	"os"
 )
 
 // StructToJSONBytes is ...
 func StructToJSONBytes(v interface{}) ([]byte, error) {
-	res, err := gojson.Marshal(v)
+	res, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +21,11 @@ func GetFileByURL(URL string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
+			err = closeErr // Propagate the close error if no other error occurred
+		}
+	}()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -31,16 +35,18 @@ func GetFileByURL(URL string) ([]byte, error) {
 	return body, nil
 }
 
-func GetPubKey(aURL string) (string, error) {
-	rawBytes, err := GetFileByURL(aURL)
+func GetPubKey(URL string) (string, error) {
+	rawBytes, err := GetFileByURL(URL)
 	if err != nil {
 		return "", err
 	}
-
 	var answer map[string]string
-
-	if err = gojson.Unmarshal(rawBytes, &answer); err != nil {
+	if err = json.Unmarshal(rawBytes, &answer); err != nil {
 		return "", err
 	}
 	return answer["value"], nil
+}
+
+func ReadFile(aFileName string) ([]byte, error) {
+	return os.ReadFile(aFileName)
 }

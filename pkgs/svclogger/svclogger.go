@@ -48,3 +48,43 @@ func (l *Log) ChangeLogLevel(lvl string) {
 	l.Logger.Info().Msgf("Change log level to %v", lvl)
 	zerolog.SetGlobalLevel(GetLevelByString(lvl))
 }
+
+func (l *Log) Debugf(aMsg string, args ...any) {
+	l.Logger.Debug().Msgf(aMsg, args...)
+}
+
+func (l *Log) Infof(aMsg string, args ...any) {
+	l.Logger.Info().Msgf(aMsg, args...)
+}
+
+func (l *Log) Errorf(aMsg string, args ...any) {
+	l.Logger.Error().Msgf(aMsg, args...)
+}
+
+func (l *Log) Warnf(aMsg string, args ...any) {
+	l.Logger.Warn().Msgf(aMsg, args...)
+}
+
+func (l *Log) Fatalf(aMsg string, args ...any) {
+	l.Logger.Fatal().Msgf(aMsg, args...)
+}
+
+func (l *Log) Debug(aMsg string) {
+	l.Logger.Debug().Msg(aMsg)
+}
+
+func (l *Log) Info(aMsg string) {
+	l.Logger.Info().Msg(aMsg)
+}
+
+func (l *Log) Error(aMsg string) {
+	l.Logger.Error().Msg(aMsg)
+}
+
+func (l *Log) Warn(aMsg string) {
+	l.Logger.Warn().Msg(aMsg)
+}
+
+func (l *Log) Fatal(aMsg string) {
+	l.Logger.Fatal().Msg(aMsg)
+}

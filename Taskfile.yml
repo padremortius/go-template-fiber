@@ -21,9 +21,15 @@ tasks:
         sh: git log -n 1 --format=%h
       GIT_BRANCH:
         sh: git name-rev --name-only {{.GIT_COMMIT}}
-      VERSION: '{{.BUILDNUM| default "1"}}'
+      BUILDNUM: '{{.BUILDNUM| default "1"}}'
+      BUILD_TIMESTAMP:
+        sh: date -u +'%Y-%m-%dT%H:%M:%SZ'
     cmds:
-      - go build -ldflags="-X main.aGitHash={{.GIT_COMMIT}} -X main.aGitBranch={{.GIT_BRANCH}} -X main.aBuildNumber={{.BUILDNUM}}" .
+      - go build -ldflags="-X main.aGitHash={{.GIT_COMMIT}} -X main.aGitBranch={{.GIT_BRANCH}} -X main.aBuildNumber={{.BUILDNUM}} -X main.aBuildTimeStamp={{.BUILD_TIMESTAMP}}" .
+
+  count-cloc:
+    cmds:
+      - ~/go/bin/gocloc --not-match-d="replaced|secrets|data|spec" --not-match=Taskfile.yml .
 
   gen-apidoc:
     cmds:

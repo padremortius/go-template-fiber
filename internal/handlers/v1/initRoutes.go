@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/padremortius/go-template-fiber/internal/config"
 	"github.com/padremortius/go-template-fiber/internal/storage"
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
 type (
