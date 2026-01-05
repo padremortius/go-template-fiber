@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 
 	gojson "github.com/goccy/go-json"
 	"github.com/gofiber/contrib/fiberzerolog"

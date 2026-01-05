@@ -3,7 +3,7 @@ package testcase
 import (
 	"context"
 
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
 func RunTask(aCtx context.Context, alog *svclogger.Log) {

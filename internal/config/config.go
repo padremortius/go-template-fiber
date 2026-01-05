@@ -11,8 +11,8 @@ import (
 	"github.com/padremortius/go-template-fiber/internal/crontab"
 	"github.com/padremortius/go-template-fiber/internal/httpserver"
 	"github.com/padremortius/go-template-fiber/internal/storage"
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
 	"github.com/padremortius/go-template-fiber/pkgs/common"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
 type Config struct {

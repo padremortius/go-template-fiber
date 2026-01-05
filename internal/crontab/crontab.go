@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 
 	cron "github.com/robfig/cron/v3"
 )

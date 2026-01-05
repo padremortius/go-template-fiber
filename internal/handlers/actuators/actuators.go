@@ -6,7 +6,7 @@ import (
 	"github.com/mvrilo/go-redoc"
 	fiberredoc "github.com/mvrilo/go-redoc/fiber"
 	"github.com/padremortius/go-template-fiber/internal/config"
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
 type (

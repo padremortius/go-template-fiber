@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"

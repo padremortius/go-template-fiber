@@ -13,7 +13,7 @@ import (
 	v1 "github.com/padremortius/go-template-fiber/internal/handlers/v1"
 	"github.com/padremortius/go-template-fiber/internal/httpserver"
 	"github.com/padremortius/go-template-fiber/internal/storage"
-	"github.com/padremortius/go-template-fiber/internal/svclogger"
+	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
 func Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) {
