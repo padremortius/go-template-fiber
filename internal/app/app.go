@@ -9,10 +9,9 @@ import (
 
 	"github.com/padremortius/go-template-fiber/internal/config"
 	"github.com/padremortius/go-template-fiber/internal/crontab"
-	"github.com/padremortius/go-template-fiber/internal/handlers/actuators"
 	v1 "github.com/padremortius/go-template-fiber/internal/handlers/v1"
-	"github.com/padremortius/go-template-fiber/internal/httpserver"
 	"github.com/padremortius/go-template-fiber/internal/storage"
+	"github.com/padremortius/go-template-fiber/pkgs/httpserver"
 	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
@@ -51,7 +50,7 @@ func Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) {
 	log.Logger.Info().Msg("Start web-server on port " + appCfg.HTTP.Port)
 
 	httpServer := httpserver.New(ctxParent, log, &appCfg.HTTP)
-	actuators.InitBaseRouter(httpServer.Handler, *appCfg, *log)
+	httpserver.InitBaseRouter(httpServer.Handler, appCfg.Name, *appCfg, appCfg.Version, *log)
 	appGroup := httpServer.Handler.Group(fmt.Sprint("/", appCfg.BaseApp.Name))
 	v1.InitAppRouter(appGroup, *appCfg, *log, *store)
 	// Waiting signal
