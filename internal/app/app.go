@@ -32,17 +32,17 @@ func Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) {
 
 	log.ChangeLogLevel(appCfg.Log.Level)
 
-	//init storage
+	// init storage
 	store, err := storage.New(ctxParent, appCfg.Storage.Path, log)
 	if err != nil {
 		log.Fatalf("Storage error: %v", err)
 	}
 
-	if err := store.InitDB(); err != nil {
+	if err := store.InitDB(ctxParent); err != nil {
 		log.Fatalf("Storage error: %v", err)
 	}
 
-	//Init crontab
+	// Init crontab
 	ctb := crontab.New(ctxParent, &appCfg.Crontab)
 	cron.LoadTasks(ctxParent, ctb, &appCfg.Crontab, log)
 	go ctb.StartCron()
@@ -54,7 +54,7 @@ func Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) {
 	httpServer.Start(appCfg.HTTP.Port)
 	httpserver.InitBaseRouter(httpServer.Handler, appCfg.Name, *appCfg, appCfg.Version, *log)
 	appGroup := httpServer.Handler.Group(fmt.Sprint("/", appCfg.BaseApp.Name))
-	v1.InitAppRouter(appGroup, *appCfg, *log, *store)
+	v1.InitAppRouter(appGroup, *appCfg, *log, store)
 	// Waiting signal
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
@@ -70,5 +70,12 @@ func Run(aBuildNumber, aBuildTimeStamp, aGitBranch, aGitHash string) {
 	ctb.StopCron()
 	if err := httpServer.Shutdown(shutdownTimeout); err != nil {
 		log.Errorf("app - Run - httpServer.Shutdown: %v", err)
+	} else {
+		log.Info("app - Run - httpServer.Shutdown succesful")
+	}
+	if err := store.Close(); err != nil {
+		log.Errorf("app - Run - storage.Close: %v", err)
+	} else {
+		log.Info("app - Run - storage.Close succesful")
 	}
 }
