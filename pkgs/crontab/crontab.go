@@ -32,7 +32,7 @@ func (ct Crontab) StartCron() {
 
 func (ct *Crontab) StopCron() {
 	ct.CronServer.Stop()
-	ct.WGroup.Done()
+	ct.WGroup.Wait()
 }
 
 func New(aCtx context.Context, opts *CronOpts) Crontab {
