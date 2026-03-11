@@ -6,7 +6,6 @@ import (
 
 	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 
-	gojson "github.com/goccy/go-json"
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
@@ -33,12 +32,10 @@ type AppServer struct {
 // New -.
 func New(c context.Context, log *svclogger.Log, opts *HTTP) *AppServer {
 	app := fiber.New(fiber.Config{
-		JSONEncoder:           gojson.Marshal,
-		JSONDecoder:           gojson.Unmarshal,
 		DisableStartupMessage: true,
 	})
 
-	//Logger settings
+	// Logger settings
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
 		Logger:   log.Logger,
 		Fields:   []string{"latency", "status", "method", "url", "ua", "ip", "bytesSent"},

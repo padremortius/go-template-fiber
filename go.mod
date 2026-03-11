@@ -5,7 +5,6 @@ go 1.24.0
 require (
 	github.com/ansrivas/fiberprometheus/v2 v2.14.0
 	github.com/go-playground/validator/v10 v10.30.1
-	github.com/goccy/go-json v0.10.5
 	github.com/gofiber/adaptor/v2 v2.2.1
 	github.com/gofiber/contrib/fiberzerolog v1.0.3
 	github.com/gofiber/fiber/v2 v2.52.10
