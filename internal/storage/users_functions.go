@@ -24,12 +24,12 @@ func (s *Storage) AddUser(u models.User) error {
 		}).Create(u).Error
 }
 
-func (s *Storage) DeleteUser(tgUserId int64) error {
-	s.log.Debugf("Delete user: %v", tgUserId)
+func (s *Storage) DeleteUser(tgUserID int64) error {
+	s.log.Debugf("Delete user: %v", tgUserID)
 	return s.db.Model(
 		&models.User{},
 	).Where(
-		"user_id = ?", tgUserId,
+		"user_id = ?", tgUserID,
 	).Updates(
 		models.User{Active: 0, UpdateDateTime: time.Now()},
 	).Error
