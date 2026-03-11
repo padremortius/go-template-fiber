@@ -1,4 +1,4 @@
-package redoc_test
+package redoc
 
 import (
 	"embed"
@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/mvrilo/go-redoc"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,7 +14,7 @@ import (
 var spec embed.FS
 
 func TestRedoc(t *testing.T) {
-	r := redoc.Redoc{
+	r := Redoc{
 		SpecFile: "testdata/spec.json",
 		SpecFS:   &spec,
 		SpecPath: "/openapi.json", // "/openapi.yaml"
@@ -62,7 +61,7 @@ func TestRedoc(t *testing.T) {
 }
 
 func TestRedocWithOptions(t *testing.T) {
-	r := redoc.Redoc{
+	r := Redoc{
 		SpecFile: "testdata/spec.json",
 		SpecFS:   &spec,
 		SpecPath: "/openapi.json", // "/openapi.yaml"
