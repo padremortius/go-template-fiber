@@ -20,12 +20,17 @@ func LoadTasks(aCtx context.Context, ct crontab.Crontab, opts *crontab.CronOpts,
 	}
 	if taskCount > 0 {
 		log.Debugf("taskCount = %v", taskCount)
-		ct.WGroup.Add(taskCount)
 		if !opts.Jobs[0].Disable {
 			log.Infof("Add new task. { Name: %v, Schedule: %v }", opts.Jobs[0].Name, opts.Jobs[0].Schedule)
-			_, _ = ct.CronServer.AddFunc(opts.Jobs[0].Schedule, func() {
+			_, err := ct.CronServer.AddFunc(opts.Jobs[0].Schedule, func() {
+				ct.WGroup.Add(1)
+				defer ct.WGroup.Done()
 				testcase.RunTask(ctx, log)
 			})
+			if err != nil {
+				log.Errorf("Error set crontask. Error: %v", err)
+				ct.WGroup.Done()
+			}
 		}
 	}
 }

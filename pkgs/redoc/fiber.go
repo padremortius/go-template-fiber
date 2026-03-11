@@ -1,11 +1,10 @@
-package fiberredoc
+package redoc
 
 import (
 	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mvrilo/go-redoc"
 )
 
-func New(doc redoc.Redoc) fiber.Handler {
+func New(doc Redoc) fiber.Handler {
 	return adaptor.HTTPHandlerFunc(doc.Handler())
 }

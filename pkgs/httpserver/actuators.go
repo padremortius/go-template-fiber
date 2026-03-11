@@ -3,8 +3,7 @@ package httpserver
 import (
 	fiberprometheus "github.com/ansrivas/fiberprometheus/v2"
 	fiber "github.com/gofiber/fiber/v2"
-	"github.com/mvrilo/go-redoc"
-	fiberredoc "github.com/mvrilo/go-redoc/fiber"
+	"github.com/padremortius/go-template-fiber/pkgs/redoc"
 	"github.com/padremortius/go-template-fiber/pkgs/svclogger"
 )
 
@@ -66,6 +65,6 @@ func InitBaseRouter(app *fiber.App, aSrvName string, aCfg any, aVersion any, aLo
 		},
 	}
 
-	app.Use(fiberredoc.New(doc))
+	app.Use(redoc.New(doc))
 	//}
 }

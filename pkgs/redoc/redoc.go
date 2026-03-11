@@ -3,20 +3,17 @@ package redoc
 import (
 	"bytes"
 	"embed"
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"text/template"
-
-	gjson "github.com/goccy/go-json"
 )
 
-// ErrSpecNotFound error for when spec file not found
 var ErrSpecNotFound = errors.New("spec not found")
 
-// Redoc configuration
 type Redoc struct {
 	DocsPath    string
 	SpecPath    string
@@ -27,17 +24,12 @@ type Redoc struct {
 	Options     map[string]any
 }
 
-// HTML represents the redoc index.html page
-//
 //go:embed assets/index.html
 var HTML string
 
-// JavaScript represents the redoc standalone javascript
-//
 //go:embed assets/redoc.standalone.js
 var JavaScript string
 
-// Body returns the final html with the js in the body
 func (r Redoc) Body() ([]byte, error) {
 	buf := bytes.NewBuffer(nil)
 	tpl, err := template.New("redoc").Parse(HTML)
@@ -45,9 +37,9 @@ func (r Redoc) Body() ([]byte, error) {
 		return nil, err
 	}
 
-	var optionsString = "{}"
+	optionsString := "{}"
 
-	var optionsByte, errM = gjson.Marshal(r.Options)
+	optionsByte, errM := json.Marshal(r.Options)
 	if errM == nil {
 		optionsString = string(optionsByte)
 	} else {
@@ -67,7 +59,6 @@ func (r Redoc) Body() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// Handler sets some defaults and returns a HandlerFunc
 func (r Redoc) Handler() http.HandlerFunc {
 	data, err := r.Body()
 	if err != nil {

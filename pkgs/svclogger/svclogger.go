@@ -7,13 +7,13 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// Logger -.
+// Log ...
 type Log struct {
 	Logger *zerolog.Logger
 	Level  string `env-required:"true" yaml:"level" json:"level" env:"LOG_LEVEL"`
 }
 
-// New -.
+// New ...
 func New(level string) *Log {
 	zerolog.SetGlobalLevel(GetLevelByString(level))
 	zerolog.TimestampFieldName = "timestamp"

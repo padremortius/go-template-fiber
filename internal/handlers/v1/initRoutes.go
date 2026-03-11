@@ -13,11 +13,11 @@ type (
 	v1Routes struct {
 		cfg   config.Config
 		log   svclogger.Log
-		store storage.Storage
+		store storage.StorageInterface
 	}
 )
 
-func InitAppRouter(app fiber.Router, aCfg config.Config, aLog svclogger.Log, aStore storage.Storage) {
+func InitAppRouter(app fiber.Router, aCfg config.Config, aLog svclogger.Log, aStore storage.StorageInterface) {
 	v1 := v1Routes{cfg: aCfg, log: aLog, store: aStore}
 	app.Add(http.MethodGet, "/v1/test", v1.getTest)
 }
